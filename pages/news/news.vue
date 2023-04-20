@@ -13,31 +13,62 @@
 				</view>
 			</view>
 
-			<text class="iconfont icon-fatie_icon" slot="right" ></text>
+			<text class="iconfont icon-fatie_icon" slot="right"></text>
 		</uni-nav-bar>
-		
-		
-		
-		
+
+
+
+
 		<swiper :duration="150" :current="tabIndex" @change=onChangeTab :style="'height:'+scrollHeight+'px;'">
-			<swiper-item >
-				<scroll-view scroll-y="true"  :style="'height:'+scrollHeight+'px;'" @scrolltolower="loadMoreEvent">
+			<swiper-item>
+				<scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px;'" @scrolltolower="loadMoreEvent">
 					<block v-for="(item,index) in demo" :key="index">
 						<!-- 列表样式 -->
-						<commonList :item="item" :index="index"  @doSupport="doSupport">
+						<commonList :item="item" :index="index" @doSupport="doSupport">
 						</commonList>
 						<!-- 全局分割线 -->
 						<divider></divider>
 					</block>
 				</scroll-view>
-			</swiper-item>  
-			<swiper-item >
-				<scroll-view scroll-y="true"  :style="'height:'+scrollHeight+'px;'">
-					话题
-				</scroll-view>
-			</swiper-item>  
+			</swiper-item>
+			<swiper-item>
+				<scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px;'">
+					<!-- 热门分类 -->
+					<view class="flex align-center justify-between px-3">
+						<view class="font-md">
+							热门分类
+						</view>
+						<view class="flex align-center font text-secondary" @click="openMore">
+							更多 <text class="iconfont icon-jinru"></text>
+						</view>
+					</view>
+
+					<view class="flex align-center border-bottom py-3 px-2 justify-between">
+						<view class="border rounded bg-light  px-2 py-1 animate__animated" hover-class=" animate__jello"
+							v-for="item,index in hotCate" :key="index" @click="openDetail(index)">{{item.name}}
+						</view>
+					</view>
 					
-		
+					<!-- 搜索框 -->
+					<view class="p-2">
+						<view class="bg-light rounded flex align-center justify-center py-2 ">
+							<text class="iconfont icon-sousuo mr-2"></text>
+							搜索话题
+						</view>
+					</view>
+					
+					<!-- 轮播图 -->
+					<swiper class="px-2" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
+						<swiper-item>
+							<image src="@/static/demo/banner2.jpg" mode="" class="w-100 rounded" style="height: 300rpx;"></image>e
+						</swiper-item>
+
+					</swiper>
+					
+				</scroll-view>
+			</swiper-item>
+
+
 		</swiper>
 	</view>
 </template>
@@ -45,7 +76,7 @@
 <script>
 	import commonList from "@/components/common/common-list.vue"
 	export default {
-		components:{
+		components: {
 			commonList
 		},
 		data() {
@@ -60,8 +91,7 @@
 				tabIndex: 0,
 				// 屏幕高度
 				scrollHeight: 600,
-				demo : [
-					{
+				demo: [{
 					username: "昵称",
 					userpic: "/static/default.jpg",
 					newstime: "2023-4-14 下午17:00",
@@ -75,7 +105,7 @@
 					},
 					comment_count: 2,
 					share_num: 4
-				},{
+				}, {
 					username: "昵称",
 					userpic: "/static/default.jpg",
 					newstime: "2023-4-14 下午17:00",
@@ -104,7 +134,20 @@
 					comment_count: 2,
 					share_num: 4
 				}],
-				loadmore: '上拉加载更多'
+				loadmore: '上拉加载更多',
+				hotCate: [{
+					name: "关注"
+				}, {
+					name: "推荐"
+				}, {
+					name: "体育"
+				}, {
+					name: "热点"
+				}, {
+					name: "财经"
+				}, {
+					name: "娱乐"
+				}, ]
 			}
 		},
 		onLoad() {
@@ -120,9 +163,9 @@
 				this.tabIndex = idx
 			},
 			// 点击右侧进入发布页
-			clickRight(){
+			clickRight() {
 				uni.navigateTo({
-					url:"/pages/add-input/add-input"
+					url: "/pages/add-input/add-input"
 				})
 			},
 			onChangeTab(current, source) {
@@ -133,19 +176,28 @@
 				this.tabIndex = index
 				// this.scrollInto = 'tab' + index
 			},
-			doSupport({type, index}){
+			doSupport({
+				type,
+				index
+			}) {
 				console.log(type, index);
 			},
 			// 下拉加载更多
-			loadMoreEvent(){
+			loadMoreEvent() {
 				// 验证当前是否处于加载状态
-				 if(this.loadmore !== '上拉加载更多') return;
-				 this.loadmore = '加载中...'
-				 // 模拟请求数据
-				 setTimeout(()=>{
-					 this.demo = [...this.demo, ...this.demo]
-					 this.loadmore = '上拉加载更多'
-				 },1000)
+				if (this.loadmore !== '上拉加载更多') return;
+				this.loadmore = '加载中...'
+				// 模拟请求数据
+				setTimeout(() => {
+					this.demo = [...this.demo, ...this.demo]
+					this.loadmore = '上拉加载更多'
+				}, 1000)
+			},
+			openMore(){
+				
+			},
+			openDetail(){
+				
 			}
 		}
 	}
